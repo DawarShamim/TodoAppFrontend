@@ -36,3 +36,55 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+.containerbutton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.tab-group {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 40px 0;
+}
+
+.tab-group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.tab-group li {
+  float: left;
+  width: 50%;
+}
+
+.tab-group li a {
+  display: block;
+  text-decoration: none;
+  padding: 15px;
+  background: rgba(200, 200, 200, 0.25);
+  color: #ccc;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.5s ease;
+}
+
+.tab-group li a:hover {
+  background: #333;
+  color: #fff;
+}
+
+.tab-group .active a {
+  background: #007bff;
+  color: #fff;
+}
+
+
+.tab-content > div:last-child {
+  display:none;
+}
