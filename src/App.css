@@ -88,3 +88,7 @@
 .tab-content > div:last-child {
   display:none;
 }
+
+.disabled {
+  display: none;
+}

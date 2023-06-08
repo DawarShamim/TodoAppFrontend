@@ -1,0 +1,34 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th,
+  .table td {
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .table th {
+    background-color: #2a2b38;
+    color:#c4c3ca;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .table td {
+    text-align: center;
+    background-color: #2a2b38;
+    color:#c4c3ca;
+  }
+  
+  .table .progress-icon {
+    display: flex;
+    align-items: center;
+  }
+  
+  .table .progress-icon svg {
+    margin-left: 5px;
+    color: green;
+  }
+  

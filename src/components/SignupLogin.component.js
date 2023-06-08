@@ -4,10 +4,6 @@ import './SignupLogin.css';
 function SignupLogin() {
   return (
     <>
-      <a href="https://front.codes/" className="logo" target="_blank" >
-        <img src="https://assets.codepen.io/1462889/fcy.png" alt="" />
-      </a>
-
       <div className="section">
         <div className="container">
           <div className="row full-height justify-content-center">
