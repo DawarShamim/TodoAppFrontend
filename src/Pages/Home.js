@@ -1,18 +1,20 @@
 import React from 'react';
-import './SignupLogin.css';
+import './home.css';
 import DataTable from '../layout/DataGrid.layout';
 
+import Navbar from '../components/NavBar';
+
 function DataGrid() {
-    return (
-      
+  return (<>
+      <Navbar/>
       <div className="card-front">
       <div className="section">
         <div className="container">
-        <h1>DataTable Example</h1>
+
         <DataTable />
       </div>
       </div>
-      </div>
+      </div></>
     );
   }
   
