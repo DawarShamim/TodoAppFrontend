@@ -6,7 +6,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 
 function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+    <nav className="navbar navbar-expand-lg navbar-dark fixed-top">
       <div className="container">
         <div className="d-flex justify-content-between w-100">
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
@@ -16,7 +16,7 @@ function Navbar() {
             <div>
               <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
-                  <Link className="nav-link" to="/home">
+                  <Link className="nav-link" to="/task/card">
                     Home
                   </Link>
                 </li>
@@ -31,8 +31,8 @@ function Navbar() {
                     <FontAwesomeIcon icon={faUser} />
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item href="#">Profile</Dropdown.Item>
-                    <Dropdown.Item href="#">Settings</Dropdown.Item>
+                    <Dropdown.Item href="\profile">Profile</Dropdown.Item>
+                    <Dropdown.Item href="\setting">Settings</Dropdown.Item>
                     <Dropdown.Item href="#">Log out</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

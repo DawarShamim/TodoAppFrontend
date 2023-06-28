@@ -4,7 +4,7 @@ import DataTable from '../layout/DataGrid.layout';
 import Navbar from '../components/NavBar';
 import Modalbox from '../components/modalbox';
 
-function DataGrid() 
+function Home() 
 {
 const [show, setShow] = React.useState(false);
 const handleShow = () => setShow(true);
@@ -27,4 +27,4 @@ const handleClose = () => setShow(false);
     );
   }
   
-export default DataGrid;
+export default Home;
