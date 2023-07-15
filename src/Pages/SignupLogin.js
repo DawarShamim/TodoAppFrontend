@@ -7,21 +7,62 @@ import './signuplogin.css';
 function SignupLogin() {
   const [logEmail, setLogEmail] = useState('');
   const [logPassword, setLogPassword] = useState('');
-  const [signUpName, setSignUpName] = useState('');
-  const [signUpEmail, setSignUpEmail] = useState('');
-  const [signUpPassword, setSignUpPassword] = useState('');
 
+
+  const [signUpFName, setSignUpFName] = useState('');
+  const [signUpLName, setSignUpLName] = useState('');
+  
+  const [signUpEmail, setSignUpEmail] = useState('');
+  const [DOB, setDOB] = useState('');
+  const [signUpPassword, setSignUpPassword] = useState('');
+  const [signUpConfirm, setSignUpConfirm] = useState('');
+  const [errorMSG, setErrorMSG] = useState('');
+  const [errorOn,setErrorOn] = useState('');
+  
   const handleLogInSubmit = () => {
     console.log('Log In Email:', logEmail);
     console.log('Log In Password:', logPassword);
+    if (!logEmail) {
+      setErrorOn('Logmail');
+      setErrorMSG('Enter Email or Username');
+  
+    } else if (!logPassword) {
+      setErrorOn('logPassword');
+      setErrorMSG('*Enter Password')
+  };
   };
 
-  const handleSignUpSubmit = () => {
-    console.log('Sign Up Name:', signUpName);
-    console.log('Sign Up Email:', signUpEmail);
-    console.log('Sign Up Password:', signUpPassword);
-  };
-
+  const handleSignUpSubmit = () => {      
+    if (!signUpLName) {
+      setErrorOn('LastName');
+      setErrorMSG('*Please fill in all the required fields')
+  
+    } else if (!signUpFName) {
+      setErrorOn('FirstName');
+      setErrorMSG('*Please fill in all the required fields')
+    } else if (!signUpEmail) {
+      setErrorOn('Email');
+      setErrorMSG('*Please fill in all the required fields')
+    } else if (!DOB) {
+      setErrorOn('DOB');
+      setErrorMSG('*Please fill in all the required fields')
+    }   else if (!signUpPassword){
+      setErrorOn('Password');
+        setErrorMSG('*Please fill in all the required fields')
+  }
+      if (signUpPassword.length >= 8 && signUpPassword.length <= 20) {
+        if (signUpConfirm === signUpPassword) {
+        } else {
+          setErrorOn('Confirm');
+          setErrorMSG('*Both passwords should be the same');
+        }
+      } else {
+        setErrorOn('Password');
+        setErrorMSG('*Password length should be between 8 and 20 characters');
+      
+    }
+  }
+  
   return (
     <>
       <div className="section">
@@ -42,14 +83,19 @@ function SignupLogin() {
                         <div className="section text-center">
                           <h4 className="mb-4 pb-3">Log In</h4>
                           <div className="form-group">
-                            <input type="email" name="logemail" className="form-style" placeholder="Email" id="logemail" autoComplete="off" />
-                            <i className="input-icon uil uil-at"></i>
+                            <input type="email" name="logemail" className="form-style" placeholder="Email" id="logemail" autoComplete="off"
+                            onChange={e=>setLogEmail(e.target.value)} />
+                            <i className="input-icon uil uil-at"></i>  
+                            {errorOn === 'Logmail'  && <p className='error-message'>{errorMSG}</p>}
                           </div>
+                          
                           <div className="form-group mt-2">
-                            <input type="password" name="logpass" className="form-style" placeholder="Password" id="logpass" autoComplete="off" />
+                            <input type="password" name="logpass" className="form-style" placeholder="Password" id="logpass" autoComplete="off"
+                            onChange={e=>setLogPassword(e.target.value)} />
                             <i className="input-icon uil uil-lock-alt"></i>
+                            {errorOn === 'logPassword'  && <p className='error-message'>{errorMSG}</p>}
                           </div>
-                          <a href="#" className="btn mt-4" onClick={handleLogInSubmit}>submit</a>
+                          <a href="#" className="btn mt-4" onClick={handleLogInSubmit}>Login</a>
         
         
                           <p className="mb-0 mt-4 text-center"><a href="#0" className="link">Forgot your password?</a></p>
@@ -63,36 +109,45 @@ function SignupLogin() {
 
                             <div className="flexbox">
                               <div className="form-group flexbox-child">
-                                <input type="text" name="regfirstname" className="form-style" placeholder="First Name" id="regfirstname" autoComplete="off" />
+                                <input type="text" name="regfirstname" className="form-style" placeholder="First Name" id="regfirstname" autoComplete="off" 
+                                  onChange={e=>setSignUpFName(e.target.value)} 
+                                />
                                 <i className="input-icon uil uil-user"></i>
+                                {errorOn === 'FirstName'  && <p className='error-message'>{errorMSG}</p>}
                               </div>
 
                               <div className="flexbox-gap"></div>
 
                               <div className="form-group flexbox-child">
-                                <input type="email" name="reglastname" className="form-style" placeholder="Last Name" id="reglastname" autoComplete="off" />
+                                <input type="email" name="reglastname" className="form-style" placeholder="Last Name" id="reglastname" autoComplete="off" 
+                                  onChange={e=>setSignUpLName(e.target.value)} 
+                                />
                                 <i className="input-icon uil uil-at"></i>
+                                {errorOn === 'LastName'  && <p className='error-message'>{errorMSG}</p>}
                               </div>
                             </div>
 
                             <div className="form-group mt-2">
-                              <input type="text" name="regphone" className="form-style" placeholder="Phone Number" id="regphone" autoComplete="off" />
-                              <i className="input-icon uil uil-lock-alt"></i>
-                            </div>
-
-                            <div className="form-group mt-2">
-                              <input type="text" name="regemail" className="form-style" placeholder="Email" id="regemail" autoComplete="off" />
+                              <input type="text" name="regemail" className="form-style" placeholder="Email" id="regemail" autoComplete="off"
+                              onChange={e=>setSignUpEmail(e.target.value)} />
                               <i className="input-icon uil uil-user"></i>
+                              {errorOn === 'Email'  && <p className='error-message'>{errorMSG}</p>}
                             </div>
 
                             <div className="form-group mt-2">
-                              <input type="password" name="regpassword" className="form-style" placeholder="New Password" id="regpassword" autoComplete="off" />
+                              <input type="password" name="regpassword" className="form-style" placeholder="New Password" id="regpassword" autoComplete="off" 
+                                onChange={e=>setSignUpPassword(e.target.value)} 
+                                />
                               <i className="input-icon uil uil-lock-alt"></i>
+                              {errorOn === 'Password'  && <p className='error-message'>{errorMSG}</p>}
                             </div>
 
                             <div className="form-group mt-2">
-                              <input type="password" name="regconfirm" className="form-style" placeholder="Confirm Password" id="regconfirm" autoComplete="off" />
+                              <input type="password" name="regconfirm" className="form-style" placeholder="Confirm Password" id="regconfirm" autoComplete="off" 
+                                onChange={e=>setSignUpConfirm(e.target.value)} 
+                              />
                               <i className="input-icon uil uil-lock-alt"></i>
+                              {errorOn === 'Confirm'  && <p className='error-message'>{errorMSG}</p>}
                             </div>
 
                             <div className="flexbox mt-2">
@@ -119,7 +174,7 @@ function SignupLogin() {
                             </div>
                             </div>
 
-                            <a href="#" className="btn mt-4">Submit</a>
+                            <a href="#" className="btn mt-4" onClick={handleSignUpSubmit}>Sign Up</a>
                           </div>
                         </div>
                       </div>

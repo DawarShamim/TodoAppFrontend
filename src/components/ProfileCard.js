@@ -9,15 +9,17 @@ function ProfileCard(props) {
         <Card.Body>
           <Row>
             <Col xs={4}>
-              <div>Name:</div>
+              <div>First Name:</div>
+              <div>Last Name:</div>
               <div>Email:</div>
-              <div>Phone Number:</div>
+              <div>Username:</div>
               <div>Date of Birth:</div>
             </Col>
             <Col xs={8}>
-              <div>{props._name}</div>
+              <div>{props._firstname}</div>
+              <div>{props._lastname}</div>
               <div>{props._email}</div>
-              <div>{props._phoneno}</div>
+              <div>{props._UserName}</div>
               <div>{props._birthday}</div>
             </Col>
           </Row>

@@ -6,8 +6,11 @@ import ProfileCard from '../components/ProfileCard';
 
 function ProfilePage() {
   // Sample profile data
-  const email = 'example@example.com';
-  const phoneno = 'example_user';
+  const firstname = 'Not Available';
+  const lastname = 'Not Available';
+  const username = 'Not Available';
+  const email = 'Not Available';
+  const birthday='Not Available';
 
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
   const [showPasswordModal, setShowPasswordModal] = React.useState(false);
@@ -22,7 +25,7 @@ function ProfilePage() {
     <>
       <Navbar />
       <div className="profile-container">
-        <ProfileCard _name={"DAWar"} _email={email} _phoneno={phoneno} _birthday={"dsagv"} />
+        <ProfileCard _firstname={firstname} _lastname={lastname}  _email={email}  _UserName ={username} _birthday={birthday} />
       </div>
       <button className="btn" onClick={handleUpdateModalOpen}>
         Update Profile
