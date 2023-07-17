@@ -1,7 +1,7 @@
+import axios from 'axios';
 import React,{useState} from 'react';
 import './signuplogin.css';
-
-
+import { baseURL, saveToken } from '../services/base.services';
 
 
 function SignupLogin() {
@@ -18,51 +18,133 @@ function SignupLogin() {
   const [signUpConfirm, setSignUpConfirm] = useState('');
   const [errorMSG, setErrorMSG] = useState('');
   const [errorOn,setErrorOn] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedDay, setSelectedDay] = useState('');
   
-  const handleLogInSubmit = () => {
-    console.log('Log In Email:', logEmail);
-    console.log('Log In Password:', logPassword);
-    if (!logEmail) {
-      setErrorOn('Logmail');
-      setErrorMSG('Enter Email or Username');
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   
-    } else if (!logPassword) {
-      setErrorOn('logPassword');
-      setErrorMSG('*Enter Password')
-  };
+  const startYear = 1945; // Start year of the range
+  const endYear = 2023; // End year of the range
+  
+  const yearRange = Array.from(
+    { length: endYear - startYear + 1 },
+    (_, index) => startYear + index
+  );
+  
+  const isLeapYear = (year) => {
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
   };
 
-  const handleSignUpSubmit = () => {      
-    if (!signUpLName) {
-      setErrorOn('LastName');
-      setErrorMSG('*Please fill in all the required fields')
-  
-    } else if (!signUpFName) {
-      setErrorOn('FirstName');
-      setErrorMSG('*Please fill in all the required fields')
-    } else if (!signUpEmail) {
-      setErrorOn('Email');
-      setErrorMSG('*Please fill in all the required fields')
-    } else if (!DOB) {
-      setErrorOn('DOB');
-      setErrorMSG('*Please fill in all the required fields')
-    }   else if (!signUpPassword){
-      setErrorOn('Password');
-        setErrorMSG('*Please fill in all the required fields')
-  }
-      if (signUpPassword.length >= 8 && signUpPassword.length <= 20) {
-        if (signUpConfirm === signUpPassword) {
-        } else {
-          setErrorOn('Confirm');
-          setErrorMSG('*Both passwords should be the same');
-        }
-      } else {
-        setErrorOn('Password');
-        setErrorMSG('*Password length should be between 8 and 20 characters');
-      
+  const getDaysInMonth = (month, year) => {
+    switch (month) {
+      case 'January':
+      case 'March':
+      case 'May':
+      case 'July':
+      case 'August':
+      case 'October':
+      case 'December':
+        return 31;
+      case 'April':
+      case 'June':
+      case 'September':
+      case 'November':
+        return 30;
+      case 'February':
+        return isLeapYear(year) ? 29 : 28;
+      default:
+        return 0; // Invalid month
     }
-  }
+  };
   
+
+  
+
+  const handleLogInSubmit = () => {
+    setErrors({});
+      if (!logEmail) {
+      setErrors((prevErrors) => ({ ...prevErrors, Logmail: '*Enter Email or Username' }));
+    
+    } else if (!logPassword) {
+    
+      setErrors((prevErrors) => ({ ...prevErrors, logPassword: '*Enter Password' }));
+    
+    } else {
+      // Create a payload object with the required data
+      const payload = {
+        usernameOrEmail: logEmail,
+        password: logPassword,
+            };
+  
+            axios({
+              method: 'post',
+              url: baseURL +'api/Login',
+              timeout: 10000,    // 4 seconds timeout
+              data:payload
+            })
+            .then(response => {
+              saveToken(response.data.result.token)
+              console.log(response.data.result);
+              console.log(response.request.status);              
+              // Check the status code
+              if (response.request.status === 200) {
+                // Redirect to the next page
+                window.location.href = 'http://localhost:3000/task/card';
+              }
+            })
+            .catch(error => {
+              if(error.request.status === 401){
+                setErrors((prevErrors) => ({ ...prevErrors, Invalid: 'Invalid Username or Password' }));
+              setLogEmail('');
+              setLogPassword('');
+          };
+        })  
+    }
+  };
+  
+  
+
+  const handleSignUpSubmit = () => {      
+    setErrors({});
+
+    if (!signUpLName) {
+      setErrors((prevErrors) => ({ ...prevErrors, LastName: '*Please fill in all the required fields' }));
+    }
+
+    if (!signUpFName) {
+      setErrors((prevErrors) => ({ ...prevErrors, FirstName: '*Please fill in all the required fields' }));
+    }
+
+    if (!signUpEmail) {
+      setErrors((prevErrors) => ({ ...prevErrors, Email: '*Please fill in all the required fields' }));
+    }
+
+    if (!DOB) {
+      setErrors((prevErrors) => ({ ...prevErrors, DOB: '*Please fill in all the required fields' }));
+    }
+
+    if (!signUpPassword) {
+      setErrors((prevErrors) => ({ ...prevErrors, Password: '*Please fill in all the required fields' }));
+    }
+
+    if (signUpPassword.length < 8 || signUpPassword.length > 20) {
+      setErrors((prevErrors) => ({ ...prevErrors, Password: '*Password length should be between 8 and 20 characters' }));
+    }
+
+    if (signUpConfirm !== signUpPassword) {
+      setErrors((prevErrors) => ({ ...prevErrors, Confirm: '*Both passwords should be the same' }));
+    }
+
+    // Proceed with signup if there are no errors
+    if (Object.keys(errors).length === 0) {
+      // Perform signup logic here
+      
+  }
+}
+
   return (
     <>
       <div className="section">
@@ -83,17 +165,20 @@ function SignupLogin() {
                         <div className="section text-center">
                           <h4 className="mb-4 pb-3">Log In</h4>
                           <div className="form-group">
+                          {errors.Invalid && <p className="error-message">{errors.Invalid}</p>}
+                            
                             <input type="email" name="logemail" className="form-style" placeholder="Email" id="logemail" autoComplete="off"
                             onChange={e=>setLogEmail(e.target.value)} />
                             <i className="input-icon uil uil-at"></i>  
-                            {errorOn === 'Logmail'  && <p className='error-message'>{errorMSG}</p>}
+                            {errors.Logmail && <p className="error-message">{errors.Logmail}</p>}
                           </div>
                           
                           <div className="form-group mt-2">
                             <input type="password" name="logpass" className="form-style" placeholder="Password" id="logpass" autoComplete="off"
                             onChange={e=>setLogPassword(e.target.value)} />
                             <i className="input-icon uil uil-lock-alt"></i>
-                            {errorOn === 'logPassword'  && <p className='error-message'>{errorMSG}</p>}
+                            {errors.logPassword && <p className="error-message">{errors.logPassword}</p>}
+                          
                           </div>
                           <a href="#" className="btn mt-4" onClick={handleLogInSubmit}>Login</a>
         
@@ -113,7 +198,6 @@ function SignupLogin() {
                                   onChange={e=>setSignUpFName(e.target.value)} 
                                 />
                                 <i className="input-icon uil uil-user"></i>
-                                {errorOn === 'FirstName'  && <p className='error-message'>{errorMSG}</p>}
                               </div>
 
                               <div className="flexbox-gap"></div>
@@ -123,15 +207,14 @@ function SignupLogin() {
                                   onChange={e=>setSignUpLName(e.target.value)} 
                                 />
                                 <i className="input-icon uil uil-at"></i>
-                                {errorOn === 'LastName'  && <p className='error-message'>{errorMSG}</p>}
-                              </div>
+                                </div>
                             </div>
-
+                              {(errors.LastName || errors.FirstName) && (<p className="error-message">{errors.LastName || errors.FirstName}</p>)}
                             <div className="form-group mt-2">
                               <input type="text" name="regemail" className="form-style" placeholder="Email" id="regemail" autoComplete="off"
                               onChange={e=>setSignUpEmail(e.target.value)} />
                               <i className="input-icon uil uil-user"></i>
-                              {errorOn === 'Email'  && <p className='error-message'>{errorMSG}</p>}
+                              {errors.Email && <p className="error-message">{errors.Email}</p>}
                             </div>
 
                             <div className="form-group mt-2">
@@ -139,39 +222,60 @@ function SignupLogin() {
                                 onChange={e=>setSignUpPassword(e.target.value)} 
                                 />
                               <i className="input-icon uil uil-lock-alt"></i>
-                              {errorOn === 'Password'  && <p className='error-message'>{errorMSG}</p>}
-                            </div>
+                              {errors.Password && <p className="error-message">{errors.Password}</p>}
+                              </div>
 
                             <div className="form-group mt-2">
                               <input type="password" name="regconfirm" className="form-style" placeholder="Confirm Password" id="regconfirm" autoComplete="off" 
                                 onChange={e=>setSignUpConfirm(e.target.value)} 
                               />
                               <i className="input-icon uil uil-lock-alt"></i>
-                              {errorOn === 'Confirm'  && <p className='error-message'>{errorMSG}</p>}
+                              {errors.Confirm && <p className="error-message">{errors.Confirm}</p>}
                             </div>
 
+                            <h5 className= "form-heading">Date of Birth</h5>
                             <div className="flexbox mt-2">
-                              <select className="form-group p-3 m-0 form-style flexbox-child">
-                              <option>Day</option>
-                              {Array.from({ length: 30 }, (_, index) => (
-                                <option key={index + 1}>{index + 1}</option>
+                            <select className="form-group p-3 m-0 form-style flexbox-child"
+                              value={selectedYear}
+                              onChange={(e) => setSelectedYear(e.target.value)}
+                            >
+                              <option>Year</option>
+                              {yearRange.map((year) => (
+                                <option key={year}>{year}</option>
                               ))}
                             </select>
 
                             <div className="flexbox-gap"></div>
 
-                            <select className="form-group p-3 m-0 form-style flexbox-child">
-                                <option>Month</option>
-                                {/* Add month options here */}
-                              </select>
+                            <select
+                              className="form-group p-3 m-0 form-style flexbox-child"
+                              value={selectedMonth}
+                              onChange={(e) => setSelectedMonth(e.target.value)}
+                            >
+                              <option>Month</option>
+                              {months.map((month, index) => (
+                                <option key={index}>{month}</option>
+                              ))}
+                            </select>
 
-                              <div className="flexbox-gap"></div>
+                            <div className="flexbox-gap"></div>
 
-                              <select className="form-group p-3 m-0 form-style flexbox-child">
-                                <option>Year</option>
-                                {/* Add year options here */}
-                              </select>
+                            <select
+                              className="form-group p-3 m-0 form-style flexbox-child"
+                              value={selectedDay}
+                              onChange={(e) => setSelectedDay(e.target.value)}
+                            >
+                              <option>Day</option>
+                              {Array.from({ length: getDaysInMonth(selectedMonth, selectedYear) }, (_, index) => (
+                                <option key={index + 1}>{index + 1}</option>
+                              ))}
+                            </select>
+
+
+
+
                             </div>
+
                             </div>
 
                             <a href="#" className="btn mt-4" onClick={handleSignUpSubmit}>Sign Up</a>

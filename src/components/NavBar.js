@@ -4,8 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import Dropdown from 'react-bootstrap/Dropdown';
 import './navbar.css';
+import { logout } from '../services/base.services';
 
 function Navbar() {
+  const handleLogout = () => {
+    logout(); // Call the logout function
+  };
   return (
     <nav  className="navbar border-bottom frost-glass navbar-expand-lg navbar-dark fixed-top">
       <div className="container  " >
@@ -34,7 +38,7 @@ function Navbar() {
                   <Dropdown.Menu>
                     <Dropdown.Item href="\profile">Profile</Dropdown.Item>
                     <Dropdown.Item href="\setting">Settings</Dropdown.Item>
-                    <Dropdown.Item href="#">Log out</Dropdown.Item>
+                    <Dropdown.Item onClick={handleLogout}>Log out</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </li>

@@ -1,7 +1,5 @@
 import React from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import SignupLogin from './Pages/SignupLogin';
@@ -10,15 +8,6 @@ import Profile from './Pages/Profile';
 import Page404 from './Pages/Page404';
 import CardView from './Pages/CardView';
 import Settings from './Pages/Settings';
-
-
-const isLoggedIn = () => {
-  const token = localStorage.getItem('token');
-  // Add your logic to check if the token is valid and authentic
-  // You can validate the token against your server or perform any necessary checks
-  // Return true if the token is valid and authentic, false otherwise
-  return token !== null && token !== undefined; // Example check, modify as per your authentication mechanism
-};
 
 
 function App() {
@@ -33,7 +22,6 @@ function App() {
           <Route path="/task/card" element={<CardView />} />
           <Route path="/setting" element={<Settings />} />
           <Route path="*" element={<Page404 />} />
-              {/* <Route path="*" element={isLoggedIn() ? null : <Navigate to="/Page404" replace />} */}
             </Routes>
           </div>
     </Router>
