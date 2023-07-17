@@ -16,8 +16,6 @@ function SignupLogin() {
   const [DOB, setDOB] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpConfirm, setSignUpConfirm] = useState('');
-  const [errorMSG, setErrorMSG] = useState('');
-  const [errorOn,setErrorOn] = useState('');
   const [errors, setErrors] = useState({});
 
   const [selectedMonth, setSelectedMonth] = useState('');
@@ -109,7 +107,11 @@ function SignupLogin() {
 
   const handleSignUpSubmit = () => {      
     setErrors({});
+    setDOB(selectedYear + "-" + (months.indexOf(selectedMonth)+1) + "-" + selectedDay);
+    console.log(DOB);
+    console.log("Month", months[months.indexOf(selectedMonth)]);
 
+    // 2001-01-16
     if (!signUpLName) {
       setErrors((prevErrors) => ({ ...prevErrors, LastName: '*Please fill in all the required fields' }));
     }
@@ -121,9 +123,8 @@ function SignupLogin() {
     if (!signUpEmail) {
       setErrors((prevErrors) => ({ ...prevErrors, Email: '*Please fill in all the required fields' }));
     }
-
-    if (!DOB) {
-      setErrors((prevErrors) => ({ ...prevErrors, DOB: '*Please fill in all the required fields' }));
+    if (selectedYear === 'Year' || selectedMonth === 'Month' || selectedDay === 'Day') {
+      setErrors((prevErrors) => ({ ...prevErrors, DOB: '*Please Select An Option' }));
     }
 
     if (!signUpPassword) {
@@ -270,12 +271,9 @@ function SignupLogin() {
                                 <option key={index + 1}>{index + 1}</option>
                               ))}
                             </select>
-
-
-
-
                             </div>
-
+                            {errors.DOB && <p className="error-message">{errors.DOB}</p>}
+                            
                             </div>
 
                             <a href="#" className="btn mt-4" onClick={handleSignUpSubmit}>Sign Up</a>

@@ -15,7 +15,13 @@
     border-radius: 6px;
     color: #c4c3ca;
   }
-
+  .profile-field {
+    border-bottom: 1px solid #ccc;
+    padding: 4px ;
+  }
+  .profile-value {
+    padding: 4px ;
+  } 
 
   .btn{  
     border-radius: 4px;
