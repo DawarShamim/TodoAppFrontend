@@ -4,16 +4,17 @@ import TaskList from "../layout/TaskCard";
 import './cardview.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { decodeToken } from '../services/base.services';
+import {useNavigate} from 'react-router-dom';
 
 function CardView() {
+  const navigate = useNavigate();
   const decodedToken = decodeToken();
 
   if (!decodedToken) {
     // Redirect to the login page or perform any other desired action
-    window.location.href = 'http://localhost:3000/login';
-  } else {
-    console.log(decodedToken);
+    navigate('/login');
   }
+  
   const [show, setShow] = React.useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);

@@ -5,10 +5,15 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import Dropdown from 'react-bootstrap/Dropdown';
 import './navbar.css';
 import { logout } from '../services/base.services';
+import { useNavigate} from 'react-router-dom';
+
+
 
 function Navbar() {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    logout(); // Call the logout function
+    logout(navigate); // Pass navigate as an argument to the logout function
   };
   return (
     <nav  className="navbar border-bottom frost-glass navbar-expand-lg navbar-dark fixed-top">

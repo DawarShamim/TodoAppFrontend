@@ -2,22 +2,22 @@ import axios from 'axios';
 import React,{useState} from 'react';
 import './signuplogin.css';
 import { baseURL, saveToken } from '../services/base.services';
-
+import { useNavigate} from 'react-router-dom';
 
 function SignupLogin() {
+  const navigate = useNavigate();
   const [logEmail, setLogEmail] = useState('');
   const [logPassword, setLogPassword] = useState('');
 
 
   const [signUpFName, setSignUpFName] = useState('');
   const [signUpLName, setSignUpLName] = useState('');
-  
   const [signUpEmail, setSignUpEmail] = useState('');
   const [DOB, setDOB] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpConfirm, setSignUpConfirm] = useState('');
+  
   const [errors, setErrors] = useState({});
-
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedDay, setSelectedDay] = useState('');
@@ -57,9 +57,6 @@ function SignupLogin() {
         return 0; // Invalid month
     }
   };
-  
-
-  
 
   const handleLogInSubmit = () => {
     setErrors({});
@@ -80,17 +77,15 @@ function SignupLogin() {
             axios({
               method: 'post',
               url: baseURL +'api/Login',
-              timeout: 10000,    // 4 seconds timeout
+              timeout: 100000,    // 4 seconds timeout
               data:payload
             })
             .then(response => {
-              saveToken(response.data.result.token)
-              console.log(response.data.result);
-              console.log(response.request.status);              
+              saveToken(response.data.result.token)            
               // Check the status code
               if (response.request.status === 200) {
                 // Redirect to the next page
-                window.location.href = 'http://localhost:3000/task/card';
+                navigate('/task/card');
               }
             })
             .catch(error => {
@@ -104,14 +99,12 @@ function SignupLogin() {
   };
   
   
+const validateForm= () =>{
+  setErrors({});
+    const validDomains = ["gmail.com", "hotmail.com", "yahoo.com"]; // Add your list of authentic domain names
 
-  const handleSignUpSubmit = () => {      
-    setErrors({});
-    setDOB(selectedYear + "-" + (months.indexOf(selectedMonth)+1) + "-" + selectedDay);
-    console.log(DOB);
-    console.log("Month", months[months.indexOf(selectedMonth)]);
-
-    // 2001-01-16
+    const emailRegex = new RegExp(`^[\\w+.-]+@(?:${validDomains.join("|")})$`, "i");
+    
     if (!signUpLName) {
       setErrors((prevErrors) => ({ ...prevErrors, LastName: '*Please fill in all the required fields' }));
     }
@@ -122,11 +115,14 @@ function SignupLogin() {
 
     if (!signUpEmail) {
       setErrors((prevErrors) => ({ ...prevErrors, Email: '*Please fill in all the required fields' }));
-    }
-    if (selectedYear === 'Year' || selectedMonth === 'Month' || selectedDay === 'Day') {
+       }
+      else if (!emailRegex.test(signUpEmail)) {
+        setErrors((prevErrors) => ({ ...prevErrors, Email: '*Please enter a valid email address' }));
+      }
+
+    if (selectedYear === 'Year' || selectedMonth === 'Month' || selectedDay === 'Day' || selectedYear === '' || selectedMonth === '' || selectedDay === '') {
       setErrors((prevErrors) => ({ ...prevErrors, DOB: '*Please Select An Option' }));
     }
-
     if (!signUpPassword) {
       setErrors((prevErrors) => ({ ...prevErrors, Password: '*Please fill in all the required fields' }));
     }
@@ -139,12 +135,58 @@ function SignupLogin() {
       setErrors((prevErrors) => ({ ...prevErrors, Confirm: '*Both passwords should be the same' }));
     }
 
+    // console.log(errors);
     // Proceed with signup if there are no errors
     if (Object.keys(errors).length === 0) {
+      return true;
       // Perform signup logic here
       
   }
+
 }
+
+
+  const handleSignUpSubmit = () => {      
+    const isValid = validateForm();
+
+    if (isValid) {
+
+      
+  const trimmedEmail = signUpEmail.replace(/@.*/, ''); // Removes everything after the @ symbol
+  const SignupPayload = {
+    Email: signUpEmail,
+    Username: trimmedEmail,
+    Password: signUpPassword,
+    FirstName: signUpFName,
+    LastName: signUpLName,
+    DateOfBirth: selectedYear + '-' + (months.indexOf(selectedMonth) + 1) + '-' + selectedDay,
+  };
+  console.log(SignupPayload);
+
+      axios({
+        method: 'post',
+        url: baseURL +'api/User/new',
+        // url: 'http://localhost:8080/api/User/new',
+        timeout: 100000,    // 4 seconds timeout
+        data:SignupPayload
+      })
+      .then(response => {
+        console.log(response)
+        saveToken(response.data.token)            
+        // Check the status code
+        if (response.request.status === 201) {
+          // Redirect to the next page
+          navigate('/task/card');
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        setErrors((prevErrors) => ({ ...prevErrors, Email: '*INalid' }));
+        // console.log(error);
+        // if(error.request.status === 400){
+      // Proceed with signup logic } 
+    
+});}}
 
   return (
     <>
@@ -168,7 +210,7 @@ function SignupLogin() {
                           <div className="form-group">
                           {errors.Invalid && <p className="error-message">{errors.Invalid}</p>}
                             
-                            <input type="email" name="logemail" className="form-style" placeholder="Email" id="logemail" autoComplete="off"
+                            <input type="email" name="logemail" className="form-style" placeholder="Email or Username" id="logemail" autoComplete="off"
                             onChange={e=>setLogEmail(e.target.value)} />
                             <i className="input-icon uil uil-at"></i>  
                             {errors.Logmail && <p className="error-message">{errors.Logmail}</p>}
@@ -181,7 +223,7 @@ function SignupLogin() {
                             {errors.logPassword && <p className="error-message">{errors.logPassword}</p>}
                           
                           </div>
-                          <a href="#" className="btn mt-4" onClick={handleLogInSubmit}>Login</a>
+                          <a className="btn mt-4" onClick={handleLogInSubmit}>Login</a>
         
         
                           <p className="mb-0 mt-4 text-center"><a href="#0" className="link">Forgot your password?</a></p>
@@ -222,7 +264,8 @@ function SignupLogin() {
                               <input type="password" name="regpassword" className="form-style" placeholder="New Password" id="regpassword" autoComplete="off" 
                                 onChange={e=>setSignUpPassword(e.target.value)} 
                                 />
-                              <i className="input-icon uil uil-lock-alt"></i>
+                                <i className="input-icon uil uil-user"></i>
+                              {/* <FontAwesomeIcon icon={faLock} className="input-icon" /> */}
                               {errors.Password && <p className="error-message">{errors.Password}</p>}
                               </div>
 

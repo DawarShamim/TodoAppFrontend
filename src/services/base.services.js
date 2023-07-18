@@ -28,12 +28,10 @@ function decodeToken() {
     }
   }
   
-
-function logout() {
-  localStorage.removeItem('web-token');
-  window.location.href = 'http://localhost:3000/';
-              
-  // Perform any additional logout logic (e.g., redirecting to the login page)
-}
-
-export { saveToken, decodeToken, logout, getToken, baseURL };
+  function logout(navigate) {
+    localStorage.removeItem('web-token');
+    navigate('/');
+  }
+   
+  
+  export { saveToken, decodeToken, logout, getToken, baseURL };
