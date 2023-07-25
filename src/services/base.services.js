@@ -1,6 +1,8 @@
 import jwt_decode from "jwt-decode";
 
-const baseURL = 'https://enchanting-ruby-nightingale.cyclic.app/';
+// const baseURL = 'https://enchanting-ruby-nightingale.cyclic.app/';
+const baseURL = 'http://localhost:8080/';
+
 
 function getToken() {
   // Get token from local storage
@@ -32,6 +34,64 @@ function decodeToken() {
     localStorage.removeItem('web-token');
     navigate('/');
   }
+  function config_header(){
+    const authtoken= getToken();
+
+    const req_header = {
+      headers: {
+        Authorization: `Bearer ${authtoken}`
+      }
+    }; 
+    return req_header;
+  }
    
   
-  export { saveToken, decodeToken, logout, getToken, baseURL };
+  export { saveToken, decodeToken, logout, getToken, baseURL,config_header};
+
+ 
+
+ 
+  // baseURL+api/Task/changeStatus/task_id;
+
+  // {
+  //   "title": "Updated Task Title",
+  //   "description": "Updated task description",
+  //   "dueDate": "2023-07-31",
+  //   "priority": "high"
+  // }
+
+
+  // /api/Task/changeStatus/64baed8db10bb58edf6ea545
+  // {"newstatus": true};
+
+
+  // api/Task/delete/task_id;
+
+
+
+  // api/User/updatePassword;
+  // {
+  //   "oldPassword": "7272ammi",
+  //   "newPassword": "ammi7272"
+  // }
+
+
+  // http://localhost:8080/api/User/updateProfile;
+  // {
+  //   "firstName": "John",
+  //   "lastName": "Doe",
+  //   "dateOfBirth": "1990-01-01"
+  // }
+  
+  
+
+
+
+
+
+
+  
+
+
+
+

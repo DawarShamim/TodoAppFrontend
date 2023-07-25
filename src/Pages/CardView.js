@@ -5,10 +5,14 @@ import './cardview.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { decodeToken } from '../services/base.services';
 import {useNavigate} from 'react-router-dom';
+import { baseURL,config_header } from '../services/base.services';
+import axios from 'axios';
+import { useState,useEffect } from 'react';
 
 function CardView() {
   const navigate = useNavigate();
   const decodedToken = decodeToken();
+  const [tasks,setTasks] = useState([]);
 
   if (!decodedToken) {
     // Redirect to the login page or perform any other desired action
@@ -21,14 +25,43 @@ function CardView() {
   const [orderBy, setOrderBy] = React.useState(null);
   const [sortOrder,setSortOrder]= React.useState(null);
 
+  // baseURL+api/Task/all;
+const config = config_header();
+  useEffect(() => {
+    const getAllTasks = async () => {
+      try {
+        const response = await axios.get(`${baseURL}api/Task/all`,config);
 
-  const tasks = [
-    { id: 1, title: 'Task 1', description: 'Description for Task 1', due_date: "2023-6-23", priority: 'low' },
-    { id: 2, title: 'Task 2', description: 'Description for Task 2', due_date: "2023-6-25", priority: 'low' },
-    { id: 3, title: 'Task 3', description: 'Description for Task 3', due_date: "2023-6-20", priority: 'high' },
-    { id: 4, title: 'Task 4', description: 'Description for Task 4', due_date: "2023-6-28", priority: 'medium' },
-    { id: 5, title: 'Task 5', description: 'Description for Task 5', due_date: "2023-6-26", priority: 'medium' },
-  ];
+        // Check the status code
+        if (response.status === 200) {
+          const convertedData = response.data.tasks.map((task, index) => ({
+            id: task._id,
+            title: task.title || `Task ${index + 1}`,
+            description: task.description || `Description for Task ${index + 1}`,
+            due_date: task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "",
+            priority: task.priority || 'Low',
+          }));
+          return convertedData;
+        } else {
+          throw new Error('Failed to fetch tasks.');
+        }
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    };
+
+    const fetchTasks = async () => {
+      try {
+        const tasksData = await getAllTasks();
+        setTasks(tasksData);
+      } catch (error) {
+console.log(error);
+      }
+    };
+
+    fetchTasks();
+  }, [config]);
 
   const sortTasksByDueDate = (tasks,sortOrder) => {
     return tasks.sort((a, b) => {
@@ -42,9 +75,9 @@ function CardView() {
   };
 
   const sortTasksByPriority = (tasks,sortOrder) => {
-    let priorityOrder = { low: 3, medium: 2, high: 1 };  
+    let priorityOrder = { Low: 3, Medium: 2, High: 1 };  
     if(sortOrder ==="ascending"){
-      priorityOrder = { low: 1, medium: 2, high: 3 };}
+      priorityOrder = { Low: 1, Medium: 2, High: 3 };}
 
     return tasks.sort((a, b) => {
       const priorityA = priorityOrder[a.priority];
@@ -68,8 +101,7 @@ function CardView() {
     sortedTasks = sortTasksByPriority(tasks,sortOrder);
   }
 
-  return (
-    <div className="body-container">
+  return (<div className="body-container">
 <div className="row">
         <div className="col-2">
           <h1>Tasks</h1>
@@ -101,8 +133,7 @@ function CardView() {
       </div>
 
       <TaskList tasks={sortedTasks} />
-    </div>
-  );
+    </div>);
 }
 
 export default CardView;

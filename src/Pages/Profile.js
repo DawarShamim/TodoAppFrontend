@@ -16,17 +16,15 @@ function ProfilePage() {
   const [creationTime,setCreationTime]=useState('Not Available');
 
   const fetchUserProfile = async () => {
-    const Token = decodeToken();
     const authtoken= getToken();
 
     const config = {
       headers: {
         Authorization: `Bearer ${authtoken}`
       }
-    };
-  
+    };  
     try {
-      const response = await axios.get(`${baseURL}api/User/userProfile/${Token.userID}`, config);
+      const response = await axios.get(`${baseURL}api/User/userProfile`, config);
       const { success, message, user } = response.data;
   
   

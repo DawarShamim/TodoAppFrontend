@@ -3,17 +3,17 @@ import React,{useState} from 'react';
 import './signuplogin.css';
 import { baseURL, saveToken } from '../services/base.services';
 import { useNavigate} from 'react-router-dom';
+import * as Loader from "react-loader-spinner";
 
 function SignupLogin() {
   const navigate = useNavigate();
   const [logEmail, setLogEmail] = useState('');
   const [logPassword, setLogPassword] = useState('');
-
+  const [isLoading,setLoading] = useState(false);
 
   const [signUpFName, setSignUpFName] = useState('');
   const [signUpLName, setSignUpLName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
-  const [DOB, setDOB] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpConfirm, setSignUpConfirm] = useState('');
   
@@ -60,6 +60,7 @@ function SignupLogin() {
 
   const handleLogInSubmit = () => {
     setErrors({});
+    setLoading(true);
       if (!logEmail) {
       setErrors((prevErrors) => ({ ...prevErrors, Logmail: '*Enter Email or Username' }));
     
@@ -89,13 +90,15 @@ function SignupLogin() {
               }
             })
             .catch(error => {
-              if(error.request.status === 401){
                 setErrors((prevErrors) => ({ ...prevErrors, Invalid: 'Invalid Username or Password' }));
               setLogEmail('');
               setLogPassword('');
-          };
         })  
     }
+
+    setTimeout(() => {console.log("Login call");
+    }, 10000);
+    setLoading(false);
   };
   
   
@@ -161,17 +164,14 @@ const validateForm= () =>{
     LastName: signUpLName,
     DateOfBirth: selectedYear + '-' + (months.indexOf(selectedMonth) + 1) + '-' + selectedDay,
   };
-  console.log(SignupPayload);
 
       axios({
         method: 'post',
         url: baseURL +'api/User/new',
-        // url: 'http://localhost:8080/api/User/new',
-        timeout: 100000,    // 4 seconds timeout
+        timeout: 10000,    // 4 seconds timeout
         data:SignupPayload
       })
       .then(response => {
-        console.log(response)
         saveToken(response.data.token)            
         // Check the status code
         if (response.request.status === 201) {
@@ -181,7 +181,7 @@ const validateForm= () =>{
       })
       .catch(error => {
         console.log(error);
-        setErrors((prevErrors) => ({ ...prevErrors, Email: '*INalid' }));
+        setErrors((prevErrors) => ({ ...prevErrors, Email: '*Invalid' }));
         // console.log(error);
         // if(error.request.status === 400){
       // Proceed with signup logic } 
@@ -223,9 +223,8 @@ const validateForm= () =>{
                             {errors.logPassword && <p className="error-message">{errors.logPassword}</p>}
                           
                           </div>
-                          <a className="btn mt-4" onClick={handleLogInSubmit}>Login</a>
-        
-        
+                          <button className="btn mt-4" onClick={handleLogInSubmit} disabled ={isLoading}>
+                          {isLoading ? (<Loader.BallTriangle type="Oval" color="#fff" height={20} width={20} /> ) : ('Login' )}</button>
                           <p className="mb-0 mt-4 text-center"><a href="#0" className="link">Forgot your password?</a></p>
                         </div>
                       </div>
@@ -318,8 +317,10 @@ const validateForm= () =>{
                             {errors.DOB && <p className="error-message">{errors.DOB}</p>}
                             
                             </div>
+                            <button className="btn mt-4" onClick={handleSignUpSubmit} disabled ={isLoading}>
+                          {isLoading ? (<Loader.BallTriangle  type="Oval" color="#fff" height={20} width={20} /> ) : ('Sign Up' )}</button>
 
-                            <a href="#" className="btn mt-4" onClick={handleSignUpSubmit}>Sign Up</a>
+                            {/* <a href="#" className="btn mt-4" onClick={handleSignUpSubmit}>Sign Up</a> */}
                           </div>
                         </div>
                       </div>

@@ -1,9 +1,41 @@
-import React from 'react';
+import React,{useState} from 'react';
 import './taskcard.css';
 import Navbar from '../components/NavBar';
+import ConfirmationDialog from '../components/DialogBox';
+import axios from 'axios';
+import { baseURL,config_header } from '../services/base.services';
+
+
 function TaskCard({ task }) {
     const cardClasses = getPriorityClass(task.priority);
+    const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+    const config =config_header();
+
+    const handleEdit = () => {
+      console.log('Edit button pressed. Card ID:', task.id);
+      // Add your edit logic here...
+    };
   
+    
+  
+    const handleConfirmDelete = async() => {
+      console.log('Delete button pressed. Card ID:', task.id);
+      const result = await axios.delete(`${baseURL}api/Task/delete/${task.id}`,config);
+      console.log(result);
+      setConfirmationOpen(false);
+    };
+    const handleDelete = () => {
+      setConfirmationOpen(true);
+    };
+    const handleCancelDelete = () => {
+      setConfirmationOpen(false);
+    };
+  
+    const handleUpdate = () => {
+      console.log('Update button pressed. Card ID:', task.id);
+      // Add your update logic here...
+    };
+    
     return (<>
         <Navbar/>
         <div className="card-body">
@@ -12,20 +44,30 @@ function TaskCard({ task }) {
           <p className="card-text">{task.description}</p>
           <h6 className="card-h6">Due By:</h6>
           <p className="card-text">{task.due_date}</p>
-          <button className="btn btn-primary">Edit</button>
-          <button className="btn btn-danger">Delete</button>
-          <button className="btn btn-secondary">Update</button>
+          <button className="btn btn-primary" onClick={handleEdit}>
+            Edit
+          </button>
+          <button className="btn btn-danger" onClick={handleDelete}>
+            Delete
+          </button>
+          <button className="btn btn-secondary" onClick={handleUpdate}>
+            Update
+          </button>
         </div>
-      </div></>
+      </div><ConfirmationDialog
+        isOpen={isConfirmationOpen}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      /></>
     );
   }
   
   function getPriorityClass(priority) {
-    if (priority === 'low') {
+    if (priority === 'Low') {
       return 'card-priority-low';
-    } else if (priority === 'medium') {
+    } else if (priority === 'Medium') {
       return 'card-priority-medium';
-    } else if (priority === 'high') {
+    } else if (priority === 'High') {
       return 'card-priority-high';
     } else {
       return '';
