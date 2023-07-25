@@ -53,7 +53,6 @@ function ProfilePage() {
   };
   
   fetchUserProfile();
-  // Call the function with the desired user ID
 
 
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);

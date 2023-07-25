@@ -11,13 +11,6 @@ function TaskCard({ task }) {
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
     const config =config_header();
 
-    const handleEdit = () => {
-      console.log('Edit button pressed. Card ID:', task.id);
-      // Add your edit logic here...
-    };
-  
-    
-  
     const handleConfirmDelete = async() => {
       console.log('Delete button pressed. Card ID:', task.id);
       const result = await axios.delete(`${baseURL}api/Task/delete/${task.id}`,config);
@@ -29,6 +22,12 @@ function TaskCard({ task }) {
     };
     const handleCancelDelete = () => {
       setConfirmationOpen(false);
+    };
+
+
+    const handleEdit = () => {
+      console.log('Edit button pressed. Card ID:', task.id);
+      // Add your edit logic here...
     };
   
     const handleUpdate = () => {
