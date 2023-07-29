@@ -24,7 +24,7 @@ function SignupLogin() {
   
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   
-  const startYear = 1945; // Start year of the range
+  const startYear = 1960; 
   const endYear = 2023; // End year of the range
   
   const yearRange = Array.from(
@@ -54,7 +54,7 @@ function SignupLogin() {
       case 'February':
         return isLeapYear(year) ? 29 : 28;
       default:
-        return 0; // Invalid month
+        return 0; 
     }
   };
 
@@ -65,11 +65,9 @@ function SignupLogin() {
       setErrors((prevErrors) => ({ ...prevErrors, Logmail: '*Enter Email or Username' }));
     
     } else if (!logPassword) {
-    
       setErrors((prevErrors) => ({ ...prevErrors, logPassword: '*Enter Password' }));
     
     } else {
-      // Create a payload object with the required data
       const payload = {
         usernameOrEmail: logEmail,
         password: logPassword,
@@ -78,34 +76,28 @@ function SignupLogin() {
             axios({
               method: 'post',
               url: baseURL +'api/Login',
-              timeout: 100000,    // 4 seconds timeout
+              timeout: 10000,    
               data:payload
             })
             .then(response => {
               saveToken(response.data.result.token)            
-              // Check the status code
               if (response.request.status === 200) {
-                // Redirect to the next page
                 navigate('/task/card');
               }
             })
             .catch(error => {
                 setErrors((prevErrors) => ({ ...prevErrors, Invalid: 'Invalid Username or Password' }));
+              
               setLogEmail('');
               setLogPassword('');
         })  
-    }
-
-    setTimeout(() => {console.log("Login call");
-    }, 10000);
+    };
     setLoading(false);
   };
   
-  
 const validateForm= () =>{
   setErrors({});
-    const validDomains = ["gmail.com", "hotmail.com", "yahoo.com"]; // Add your list of authentic domain names
-
+    const validDomains = ["gmail.com", "hotmail.com", "yahoo.com"]; 
     const emailRegex = new RegExp(`^[\\w+.-]+@(?:${validDomains.join("|")})$`, "i");
     
     if (!signUpLName) {
@@ -138,22 +130,15 @@ const validateForm= () =>{
       setErrors((prevErrors) => ({ ...prevErrors, Confirm: '*Both passwords should be the same' }));
     }
 
-    // console.log(errors);
-    // Proceed with signup if there are no errors
     if (Object.keys(errors).length === 0) {
-      return true;
-      // Perform signup logic here
-      
+      return true;      
   }
-
 }
-
 
   const handleSignUpSubmit = () => {      
     const isValid = validateForm();
 
     if (isValid) {
-
       
   const trimmedEmail = signUpEmail.replace(/@.*/, ''); // Removes everything after the @ symbol
   const SignupPayload = {
@@ -164,7 +149,6 @@ const validateForm= () =>{
     LastName: signUpLName,
     DateOfBirth: selectedYear + '-' + (months.indexOf(selectedMonth) + 1) + '-' + selectedDay,
   };
-
       axios({
         method: 'post',
         url: baseURL +'api/User/new',
@@ -180,13 +164,18 @@ const validateForm= () =>{
         }
       })
       .catch(error => {
-        console.log(error);
-        setErrors((prevErrors) => ({ ...prevErrors, Email: '*Invalid' }));
-        // console.log(error);
-        // if(error.request.status === 400){
-      // Proceed with signup logic } 
-    
+        setErrors((prevErrors) => ({ ...prevErrors, Email: '*Email already Registered' }));    
 });}}
+
+const handleKeyPress = (event, type) => {
+  if (event.key === "Enter") {
+    if (type === "login") {
+      handleLogInSubmit();
+    } else if (type === "signup") {
+      handleSignUpSubmit();
+    }
+  }
+};
 
   return (
     <>
@@ -209,16 +198,36 @@ const validateForm= () =>{
                           <h4 className="mb-4 pb-3">Log In</h4>
                           <div className="form-group">
                           {errors.Invalid && <p className="error-message">{errors.Invalid}</p>}
-                            
-                            <input type="email" name="logemail" className="form-style" placeholder="Email or Username" id="logemail" autoComplete="off"
-                            onChange={e=>setLogEmail(e.target.value)} />
+          
+                            <input 
+                            type="email"
+                            name="logemail"
+                            className="form-style"
+                            placeholder="Email or Username"
+                            id="logemail"
+                            autoComplete="off"
+                            value={logEmail}
+                            onChange={e=>setLogEmail(e.target.value)}
+                            onKeyDown={(e) => handleKeyPress(e, "login")}
+                             />
+
                             <i className="input-icon uil uil-at"></i>  
                             {errors.Logmail && <p className="error-message">{errors.Logmail}</p>}
-                          </div>
+                            </div>
                           
                           <div className="form-group mt-2">
-                            <input type="password" name="logpass" className="form-style" placeholder="Password" id="logpass" autoComplete="off"
-                            onChange={e=>setLogPassword(e.target.value)} />
+                            <input 
+                            type="password" 
+                            name="logpass" 
+                            className="form-style" 
+                            placeholder="Password" 
+                            id="logpass" 
+                            autoComplete="off" 
+                            value={logPassword}
+                            onChange={e=>setLogPassword(e.target.value)}
+                            onKeyDown={(e)=>{handleKeyPress(e,"login")}}
+                            />
+                            
                             <i className="input-icon uil uil-lock-alt"></i>
                             {errors.logPassword && <p className="error-message">{errors.logPassword}</p>}
                           
@@ -236,8 +245,15 @@ const validateForm= () =>{
 
                             <div className="flexbox">
                               <div className="form-group flexbox-child">
-                                <input type="text" name="regfirstname" className="form-style" placeholder="First Name" id="regfirstname" autoComplete="off" 
-                                  onChange={e=>setSignUpFName(e.target.value)} 
+                                <input 
+                                type="text"
+                                name="regfirstname"
+                                className="form-style"
+                                placeholder="First Name"
+                                id="regfirstname"
+                                autoComplete="off" 
+                                onChange={e=>setSignUpFName(e.target.value)} 
+                                onKeyDown={(e) => handleKeyPress(e, "signup")}
                                 />
                                 <i className="input-icon uil uil-user"></i>
                               </div>
@@ -245,32 +261,61 @@ const validateForm= () =>{
                               <div className="flexbox-gap"></div>
 
                               <div className="form-group flexbox-child">
-                                <input type="email" name="reglastname" className="form-style" placeholder="Last Name" id="reglastname" autoComplete="off" 
-                                  onChange={e=>setSignUpLName(e.target.value)} 
+                                <input 
+                                type="email"
+                                name="reglastname"
+                                className="form-style"
+                                placeholder="Last Name"
+                                id="reglastname"
+                                autoComplete="off" 
+                                onChange={e=>setSignUpLName(e.target.value)} 
+                                onKeyDown={(e) => handleKeyPress(e, "signup")} 
                                 />
                                 <i className="input-icon uil uil-at"></i>
-                                </div>
+                              </div>
                             </div>
                               {(errors.LastName || errors.FirstName) && (<p className="error-message">{errors.LastName || errors.FirstName}</p>)}
                             <div className="form-group mt-2">
-                              <input type="text" name="regemail" className="form-style" placeholder="Email" id="regemail" autoComplete="off"
-                              onChange={e=>setSignUpEmail(e.target.value)} />
+                              <input 
+                              type="text"
+                              name="regemail"
+                              className="form-style"
+                              placeholder="Email"
+                              id="regemail"
+                              autoComplete="off"
+                              onChange={e=>setSignUpEmail(e.target.value)} 
+                              onKeyDown={(e) => handleKeyPress(e, "signup")}
+                              />
                               <i className="input-icon uil uil-user"></i>
                               {errors.Email && <p className="error-message">{errors.Email}</p>}
                             </div>
 
                             <div className="form-group mt-2">
-                              <input type="password" name="regpassword" className="form-style" placeholder="New Password" id="regpassword" autoComplete="off" 
-                                onChange={e=>setSignUpPassword(e.target.value)} 
-                                />
-                                <i className="input-icon uil uil-user"></i>
+                              <input 
+                              type="password" 
+                              name="regpassword" 
+                              className="form-style" 
+                              placeholder="New Password" 
+                              id="regpassword" 
+                              autoComplete="off" 
+                              onChange={e=>setSignUpPassword(e.target.value)} 
+                              onKeyDown={(e) => handleKeyPress(e, "signup")}
+                              />  
+                              <i className="input-icon uil uil-user"></i>
                               {/* <FontAwesomeIcon icon={faLock} className="input-icon" /> */}
                               {errors.Password && <p className="error-message">{errors.Password}</p>}
                               </div>
 
                             <div className="form-group mt-2">
-                              <input type="password" name="regconfirm" className="form-style" placeholder="Confirm Password" id="regconfirm" autoComplete="off" 
-                                onChange={e=>setSignUpConfirm(e.target.value)} 
+                              <input 
+                              type="password" 
+                              name="regconfirm" 
+                              className="form-style" 
+                              placeholder="Confirm Password" 
+                              id="regconfirm" 
+                              autoComplete="off" 
+                              onChange={e=>setSignUpConfirm(e.target.value)} 
+                              onKeyDown={(e) => handleKeyPress(e, "signup")}
                               />
                               <i className="input-icon uil uil-lock-alt"></i>
                               {errors.Confirm && <p className="error-message">{errors.Confirm}</p>}
@@ -320,17 +365,16 @@ const validateForm= () =>{
                             <button className="btn mt-4" onClick={handleSignUpSubmit} disabled ={isLoading}>
                           {isLoading ? (<Loader.BallTriangle  type="Oval" color="#fff" height={20} width={20} /> ) : ('Sign Up' )}</button>
 
-                            {/* <a href="#" className="btn mt-4" onClick={handleSignUpSubmit}>Sign Up</a> */}
                           </div>
                         </div>
                       </div>
-
                     </div>
                   </div>
                 </div>
             </div>
         </div>
-    </div></>);
+    </div>
+    </>);
 }
 
 export default SignupLogin;

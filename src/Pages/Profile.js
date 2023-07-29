@@ -3,7 +3,7 @@ import './profile.css';
 import Modalbox from '../components/modalbox';
 import Navbar from '../components/NavBar';
 import ProfileCard from '../components/ProfileCard';
-import { baseURL, decodeToken, getToken } from '../services/base.services';
+import { baseURL,config_header } from '../services/base.services';
 import axios from 'axios';
 
 function ProfilePage() {
@@ -16,20 +16,14 @@ function ProfilePage() {
   const [creationTime,setCreationTime]=useState('Not Available');
 
   const fetchUserProfile = async () => {
-    const authtoken= getToken();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${authtoken}`
-      }
-    };  
+    const config = config_header();  
     try {
       const response = await axios.get(`${baseURL}api/User/userProfile`, config);
       const { success, message, user } = response.data;
   
   
       if (success) {
-        // Handle successful response
         setfirstname(user.firstName);
         setlastname(user.lastName);
         setEmail(user.email);
@@ -54,7 +48,6 @@ function ProfilePage() {
   
   fetchUserProfile();
 
-
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
   const [showPasswordModal, setShowPasswordModal] = React.useState(false);
 
@@ -68,15 +61,28 @@ function ProfilePage() {
     <>
       <Navbar />
       <div className="profile-container">
-        <ProfileCard _firstname={firstname} _lastname={lastname}  _email={email}  _UserName ={username} _birthday={birthday} _time={creationTime} />
+        <ProfileCard 
+        _firstname={firstname} 
+        _lastname={lastname}
+        _email={email}
+        _UserName ={username}
+        _birthday={birthday}
+        _time={creationTime} />
       </div>
+      
       <button className="btn" onClick={handleUpdateModalOpen}>
         Update Profile
       </button>
       <button className="btn" onClick={handlePasswordModalOpen}>
         Change Password
       </button>
-      <Modalbox title="Update Profile" show={showUpdateModal} onClose={handleUpdateModalClose} type="Profile" />
+      
+      <Modalbox 
+      title="Update Profile" 
+      show={showUpdateModal}
+      onClose={handleUpdateModalClose}
+      type="Profile" />
+
       <Modalbox title="Change Password" show={showPasswordModal} onClose={handlePasswordModalClose} type="Password"/>
     </>
   );

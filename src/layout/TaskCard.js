@@ -9,21 +9,23 @@ import { baseURL,config_header } from '../services/base.services';
 function TaskCard({ task }) {
     const cardClasses = getPriorityClass(task.priority);
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
-    const config =config_header();
+    const config = config_header();
 
+    // opens Delete Dialog Box
+    const handleDelete = () => {
+      setConfirmationOpen(true);
+    };
+    // on Confirmation of delete button 
     const handleConfirmDelete = async() => {
       console.log('Delete button pressed. Card ID:', task.id);
       const result = await axios.delete(`${baseURL}api/Task/delete/${task.id}`,config);
       console.log(result);
       setConfirmationOpen(false);
     };
-    const handleDelete = () => {
-      setConfirmationOpen(true);
-    };
+
     const handleCancelDelete = () => {
       setConfirmationOpen(false);
     };
-
 
     const handleEdit = () => {
       console.log('Edit button pressed. Card ID:', task.id);
