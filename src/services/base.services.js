@@ -61,14 +61,6 @@ function decodeToken() {
   // }
 
 
-  // /api/Task/changeStatus/64baed8db10bb58edf6ea545
-  // {"newstatus": true};
-
-
-  // api/Task/delete/task_id;
-
-
-
   // api/User/updatePassword;
   // {
   //   "oldPassword": "7272ammi",

@@ -6,7 +6,7 @@ import axios from 'axios';
 import { baseURL,config_header } from '../services/base.services';
 
 
-function TaskCard({ task }) {
+function TaskCard({ task ,fetchTasks }) {
     const cardClasses = getPriorityClass(task.priority);
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
     const config = config_header();
@@ -15,11 +15,12 @@ function TaskCard({ task }) {
     const handleDelete = () => {
       setConfirmationOpen(true);
     };
+
     // on Confirmation of delete button 
     const handleConfirmDelete = async() => {
-      console.log('Delete button pressed. Card ID:', task.id);
-      const result = await axios.delete(`${baseURL}api/Task/delete/${task.id}`,config);
-      console.log(result);
+      await axios.delete(`${baseURL}api/Task/delete/${task.id}`,config);
+      fetchTasks();
+      alert(`Deleted ${task.title}`);
       setConfirmationOpen(false);
     };
 
@@ -27,14 +28,21 @@ function TaskCard({ task }) {
       setConfirmationOpen(false);
     };
 
-    const handleEdit = () => {
+    const handleEdit = () => {      
       console.log('Edit button pressed. Card ID:', task.id);
       // Add your edit logic here...
     };
   
-    const handleUpdate = () => {
-      console.log('Update button pressed. Card ID:', task.id);
-      // Add your update logic here...
+    const handleUpdate = async () => {
+      const payload = { newstatus: !task.Status };
+      try {
+        await axios.put(`${baseURL}api/Task/changeStatus/${task.id}`, payload, config);
+        fetchTasks();
+        alert(`Status update of ${task.title} successful!`);
+      } catch (error) {
+        alert('Status Update failed');
+        
+      }
     };
     
     return (<>
@@ -45,6 +53,10 @@ function TaskCard({ task }) {
           <p className="card-text">{task.description}</p>
           <h6 className="card-h6">Due By:</h6>
           <p className="card-text">{task.due_date}</p>
+          <h6 className="card-h6">Status</h6>
+          <p className={task.Status ? "p-status-complete" : "p-status-incomplete"}>
+            {task.Status ? "Complete" : "Incomplete"}
+          </p>
           <button className="btn btn-primary" onClick={handleEdit}>
             Edit
           </button>
@@ -52,7 +64,7 @@ function TaskCard({ task }) {
             Delete
           </button>
           <button className="btn btn-secondary" onClick={handleUpdate}>
-            Update
+            Update Status
           </button>
         </div>
       </div><ConfirmationDialog
@@ -76,11 +88,11 @@ function TaskCard({ task }) {
   }
   
 
-function TaskList({ tasks }) {
+function TaskList({ tasks ,fetchTasks}) {
   return (<div className='m-3'> 
     <div className="task-list ">
       {tasks.map((task) => (
-        <TaskCard key={task.id} task={task} />
+        <TaskCard key={task.id} task={task} fetchTasks={fetchTasks}/>
       ))}
     </div></div>
   );

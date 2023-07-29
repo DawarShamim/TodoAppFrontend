@@ -5,8 +5,11 @@ import Navbar from '../components/NavBar';
 import ProfileCard from '../components/ProfileCard';
 import { baseURL,config_header } from '../services/base.services';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function ProfilePage() {
+  
+  const navigate = useNavigate();
   // Sample profile data
   const [firstname,setfirstname] = useState('Not Available');
   const [lastname,setlastname]= useState('Not Available');
@@ -20,9 +23,7 @@ function ProfilePage() {
     const config = config_header();  
     try {
       const response = await axios.get(`${baseURL}api/User/userProfile`, config);
-      const { success, message, user } = response.data;
-  
-  
+      const { success, message, user } = response.data;  
       if (success) {
         setfirstname(user.firstName);
         setlastname(user.lastName);
@@ -51,7 +52,10 @@ function ProfilePage() {
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
   const [showPasswordModal, setShowPasswordModal] = React.useState(false);
 
-  const handleUpdateModalOpen = () => setShowUpdateModal(true);
+  const GotoSettings = () => {
+    navigate('/setting')};
+  
+  
   const handleUpdateModalClose = () => setShowUpdateModal(false);
 
   const handlePasswordModalOpen = () => setShowPasswordModal(true);
@@ -70,7 +74,7 @@ function ProfilePage() {
         _time={creationTime} />
       </div>
       
-      <button className="btn" onClick={handleUpdateModalOpen}>
+      <button className="btn" onClick={GotoSettings}>
         Update Profile
       </button>
       <button className="btn" onClick={handlePasswordModalOpen}>

@@ -27,10 +27,34 @@ function CardView() {
 
   // baseURL+api/Task/all;
 const config = config_header();
-  useEffect(() => {
+
+const refresher =async () =>{
+  try {
+  setTasks([]);
+  const tasksData = await getAllTasks();
+  setTasks(tasksData);
+} catch (error) {
+  console.log(error);
+};
+};
+
+useEffect(() => {
+  // Fetch tasks only once when the component mounts
+  const fetchTasks = async () => {
+    try {
+      const tasksData = await getAllTasks();
+      setTasks(tasksData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchTasks();
+}, []); // Ensure that the dependency array is empty so that the effect runs only once
+
     const getAllTasks = async () => {
       try {
         const response = await axios.get(`${baseURL}api/Task/all`,config);
+        console.log(response.data.tasks);
 
         // Check the status code
         if (response.status === 200) {
@@ -40,6 +64,7 @@ const config = config_header();
             description: task.description || `Description for Task ${index + 1}`,
             due_date: task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "",
             priority: task.priority || 'Low',
+            Status:task.Status,
           }));
           return convertedData;
         } else {
@@ -51,18 +76,8 @@ const config = config_header();
       }
     };
 
-    const fetchTasks = async () => {
-      try {
-        const tasksData = await getAllTasks();
-        setTasks(tasksData);
-      } catch (error) {
-console.log(error);
-      }
-    };
 
-    fetchTasks();
-  }, [config]);
-
+    
   const sortTasksByDueDate = (tasks,sortOrder) => {
     return tasks.sort((a, b) => {
       const dateA = new Date(a.due_date);
@@ -132,7 +147,7 @@ console.log(error);
         </div>
       </div>
 
-      <TaskList tasks={sortedTasks} />
+      <TaskList tasks={sortedTasks} fetchTasks={refresher} />
     </div>);
 }
 
