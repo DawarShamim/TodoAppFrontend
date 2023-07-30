@@ -188,20 +188,6 @@ const passwordmodalContent=()=>{return (<Form>
         </Col>
       </Row>
     </Form.Group>
-    <Form.Group controlId="formConNewPass">
-      <Row>
-        <Col>
-          <Form.Label>Due Date</Form.Label>
-        </Col>
-        <Col>
-          <Form.Control
-            type="password"
-            value={ConNewPass}
-            onChange={(e) => setConNewPass(e.target.value)}
-          />
-        </Col>
-      </Row>
-    </Form.Group>
 </Form>)} ;
 
 
