@@ -103,3 +103,57 @@
   backdrop-filter: blur(10px);
   color:#282c34;
 }
+
+.AlertPrompt
+{
+  display: 'block';
+  width: 700;
+  padding: 30
+}
+
+.alert-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+.alert-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.close-button {
+  margin-left: 10px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 
+.button{
+  background-color: #ffeba7;
+  color: #102770;  
+  border-radius: 4px;
+  height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  margin: 20px;
+  box-shadow: 0 8px 24px 0 #0d1f5c;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.button:active,.button:hover{
+  transform: translate(4px 4px );
+  box-shadow: 0 8px 8px 0; 
+}*/

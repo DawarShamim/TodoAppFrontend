@@ -1,16 +1,22 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import './taskcard.css';
 import Navbar from '../components/NavBar';
 import ConfirmationDialog from '../components/DialogBox';
 import axios from 'axios';
 import { baseURL,config_header } from '../services/base.services';
-
+import Alertprompt from '../components/Alert';
+import EditModal from '../components/EditModal';
 
 function TaskCard({ task ,fetchTasks }) {
     const cardClasses = getPriorityClass(task.priority);
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
     const config = config_header();
+    const [popupShowAlert, setpopupShowAlert] = useState(false);
+    const [showStatusUpdateAlert, setShowStatusUpdateAlert] = useState(false);
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
 
+    const [TaskData,setTaskData]=useState('');
     // opens Delete Dialog Box
     const handleDelete = () => {
       setConfirmationOpen(true);
@@ -20,7 +26,7 @@ function TaskCard({ task ,fetchTasks }) {
     const handleConfirmDelete = async() => {
       await axios.delete(`${baseURL}api/Task/delete/${task.id}`,config);
       fetchTasks();
-      alert(`Deleted ${task.title}`);
+      // setShowAlert(true); 
       setConfirmationOpen(false);
     };
 
@@ -28,8 +34,11 @@ function TaskCard({ task ,fetchTasks }) {
       setConfirmationOpen(false);
     };
 
-    const handleEdit = () => {      
-      console.log('Edit button pressed. Card ID:', task.id);
+    const handleEdit = () => {     
+      setShow(true); 
+      // console.log(task);
+      setTaskData(task,fetchTasks);
+
       // Add your edit logic here...
     };
   
@@ -38,17 +47,40 @@ function TaskCard({ task ,fetchTasks }) {
       try {
         await axios.put(`${baseURL}api/Task/changeStatus/${task.id}`, payload, config);
         fetchTasks();
+        setShowStatusUpdateAlert(true);
+        handleShowAlert(`Status update of ${task.title} successful!`);
         alert(`Status update of ${task.title} successful!`);
       } catch (error) {
+        setShowStatusUpdateAlert(true);
         alert('Status Update failed');
         
       }
     };
+  const [alertMessage, setAlertMessage] = useState('');
+
+  const handleShowAlert = (message) => {
+    setAlertMessage(message);
+    setpopupShowAlert(true);
+  };
+
+  const handleCloseAlert = () => {
+    setpopupShowAlert(false);
+  };
     
     return (<>
         <Navbar/>
-        <div className="card-body">
-      <div className={cardClasses}>
+                <div className="card-body">
+        
+          {/* <Alertprompt type="success" message={`Status update of ${task.title} successful!`} onClose={() => setShowStatusUpdateAlert(false)} />
+         */}
+          {/* <Alertprompt severity="success" message="Sample Success Message"></Alertprompt> */}
+            {/* <Alertprompt severity="danger" message='sample'></Alertprompt> */}
+        {/* <Alertprompt type="success">Deleted {task.title}</Alertprompt> */}
+      
+        {popupShowAlert && <Alertprompt message={alertMessage} onClose={handleCloseAlert} />}
+
+        <div className={cardClasses}>
+
           <h5 className="card-title ">{task.title}</h5>
           <p className="card-text">{task.description}</p>
           <h6 className="card-h6">Due By:</h6>
@@ -60,6 +92,7 @@ function TaskCard({ task ,fetchTasks }) {
           <button className="btn btn-primary" onClick={handleEdit}>
             Edit
           </button>
+          
           <button className="btn btn-danger" onClick={handleDelete}>
             Delete
           </button>
@@ -67,6 +100,7 @@ function TaskCard({ task ,fetchTasks }) {
             Update Status
           </button>
         </div>
+          <EditModal title="Edit Task" show={show} onClose={handleClose} refresher={fetchTasks} type="Task" Editdata={(TaskData)}/>
       </div><ConfirmationDialog
         isOpen={isConfirmationOpen}
         onConfirm={handleConfirmDelete}

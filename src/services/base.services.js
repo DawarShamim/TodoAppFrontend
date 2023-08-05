@@ -60,20 +60,13 @@ function decodeToken() {
   //   "priority": "high"
   // }
 
-
+  
   // api/User/updatePassword;
   // {
   //   "oldPassword": "7272ammi",
   //   "newPassword": "ammi7272"
   // }
 
-
-  // http://localhost:8080/api/User/updateProfile;
-  // {
-  //   "firstName": "John",
-  //   "lastName": "Doe",
-  //   "dateOfBirth": "1990-01-01"
-  // }
   
   
 

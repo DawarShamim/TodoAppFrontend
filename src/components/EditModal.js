@@ -1,40 +1,61 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { baseURL, config_header } from '../services/base.services';
 
 // Move API functions outside the component
-const changePasswordAPI = async (passwordData) => {
+const EditTaskAPI = async (taskData,id) => {
   try {
-    const response = await axios.put(`${baseURL}/change-password`, passwordData, config_header());
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const createTaskAPI = async (taskData) => {
-  try {
-    const response = await axios.post(`${baseURL}api/Task/new`, taskData, config_header());
+    console.log(taskData,id);
+    const response = await axios.put(`${baseURL}api/Task/changeTask/${id}`, taskData, config_header());
     // Check the status code
+    console.log(response);
     if (response.status === 200) {
       return response;
-    } else if (response.request.status === 500) {
-      throw new Error("Error creating task.");
+    }
+    else if (response.request.status === 406) {
+      alert("Due Date cannot be in the Past.");
+      return;
+    } 
+    else if (response.request.status === 500) {
+      alert("Error Updating task.");
+      return;
     }
   } catch (error) {
     throw error;
   }
 };
 
-function Modalbox(props) {
+function EditModal(props) {
+    const { id, title, description, due_date, priority} = props.Editdata;
+
+    let formattedDueDate = "";
+    try {
+      const dateObj = new Date(due_date);
+      if (!isNaN(dateObj.getTime())) {
+        // Check if the date is valid
+        formattedDueDate = dateObj.toISOString().slice(0, 10);
+      }
+    } catch (error) {
+      console.error("Invalid date format:", error.message);
+      // Handle the error here, such as setting a default date or showing an error message
+    }
+  
+    // Set the default values using the extracted data
+    useEffect(() => {
+      setTitle(title || ""); // Use an empty string if title is undefined
+      setDescription(description || "");
+      setDueDate(formattedDueDate || ""); // Use the formatted date or an empty string if invalid
+      setPriority(priority || "");
+    }, [title, description, formattedDueDate, priority]);
+  
+
   const [Title, setTitle] = useState("");
+    
   const [Description, setDescription] = useState("");
   const [DueDate, setDueDate] = useState("");
   const [Priority, setPriority] = useState("");
-  const [currentPass, setCurrentPass] = useState("");
-  const [newPass, setNewPass] = useState("");
-  const [ConNewPass, setConNewPass] = useState("");
+
 
   const handleClose = () => {
     // Reset the input fields when the modal is closed
@@ -42,10 +63,8 @@ function Modalbox(props) {
     setDescription("");
     setDueDate("");
     setPriority("");
-    setCurrentPass("");
-    setNewPass("");
-    setConNewPass("");
     // Call the onClose prop to handle modal closing
+    props.refresher();
     props.onClose();
   };
 
@@ -67,34 +86,26 @@ function Modalbox(props) {
           DueDate: dueDateValue,
           Priority: priorityValue,
         };
-
-        await createTaskAPI(taskData);
+        await EditTaskAPI(taskData,id);
         handleClose();
       } catch (error) {
         console.error("Failed to create task:", error.message);
-        alert("Error creating task.");
-      }
-    } else if (props.type === "Password") {
-      try {
-        const passwordData = {
-          oldPassword: currentPass,
-          newPassword: newPass,
+        if(error.message==="Request failed with status code 406"){
+          alert("Due Date cannot be in the Past.")
         };
-
-        await changePasswordAPI(passwordData);
-        console.log("Password changed successfully.");
-        handleClose();
-      } catch (error) {
-        console.error("Failed to change password:", error.message);
-        alert("Error changing password.");
+        // alert(error.message);
       }
-    }
-  };
+    } 
+    };
 
-
-  const taskmodalContent =()=>{
-    return(
-    <Form>
+  return (
+    <div>
+      <Modal show={props.show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{props.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <Form>
     <Form.Group controlId="formTitle">
       <Row>
         <Col>
@@ -158,74 +169,7 @@ function Modalbox(props) {
         </Col>
       </Row>
     </Form.Group>
-  </Form>)};
-
-
-
-const passwordmodalContent=()=>{return (<Form>
-  <Form.Group controlId="formPreviousPass">
-      <Row>
-        <Col>
-          <Form.Label>Current Password</Form.Label>
-        </Col>
-        <Col>
-          <Form.Control
-            type="password"
-            placeholder="Enter Current Password"
-            value={currentPass}
-            onChange={(e) => setCurrentPass(e.target.value)}
-          />
-        </Col>
-      </Row>
-    </Form.Group>
-    <Form.Group controlId="formNewPass">
-      <Row>
-        <Col>
-          <Form.Label>New Password</Form.Label>
-        </Col>
-        <Col>
-          <Form.Control
-            type="password"
-            placeholder="Enter New Password"
-            value={newPass}
-            onChange={(e) => setNewPass(e.target.value)}
-          />
-        </Col>
-      </Row>
-    </Form.Group>
-    <Form.Group controlId="formConNewPass">
-      <Row>
-        <Col>
-          <Form.Label>Confirm Password</Form.Label>
-        </Col>
-        <Col>
-          <Form.Control
-            type="password"
-            placeholder="Confirm New Password"
-            value={ConNewPass}
-            onChange={(e) => setConNewPass(e.target.value)}
-          />
-        </Col>
-      </Row>
-    </Form.Group>
-</Form>)} ;
-
-
-const modalrender=()=>{
-if(props.type==="Task"){
-  return taskmodalContent()}
-else if (props.type==="Password"){return passwordmodalContent()}
-
-};
-
-  return (
-    <div>
-      <Modal show={props.show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{props.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-        {modalrender()}
+  </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -240,4 +184,4 @@ else if (props.type==="Password"){return passwordmodalContent()}
   );
 }
 
-export default Modalbox;
+export default EditModal;

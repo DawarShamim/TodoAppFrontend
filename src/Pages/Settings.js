@@ -36,7 +36,6 @@ const config = config_header();
       console.error('Failed to make the request:', error.message);
     }
   };
-
   useEffect(() => {
     fetchUserProfile();
   }, []); // Fetch user profile once when the component mounts
@@ -56,8 +55,6 @@ const config = config_header();
         firstName: firstname.trim() || defaultFname,
         lastName: lastname.trim() || defaultLname,
       };
-
-    console.log(payload);
       try {
         await axios.put(`${baseURL}api/User/updateProfile`, payload, config);
         navigate('/profile')
