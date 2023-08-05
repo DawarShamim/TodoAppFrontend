@@ -6,7 +6,7 @@ import { baseURL, config_header } from '../services/base.services';
 // Move API functions outside the component
 const changePasswordAPI = async (passwordData) => {
   try {
-    const response = await axios.put(`${baseURL}/change-password`, passwordData, config_header());
+    const response = await axios.put(`${baseURL}api/User/updatePassword`, passwordData, config_header());
     return response;
   } catch (error) {
     throw error;
@@ -76,13 +76,22 @@ function Modalbox(props) {
       }
     } else if (props.type === "Password") {
       try {
+        if (newPass.length < 8 || newPass.length > 20) {
+          alert('*Password length should be between 8 and 20 characters' );
+          return;
+        }
+        if (ConNewPass !== newPass) {
+         alert('*Both passwords should be the same');
+         return;
+        }
+
         const passwordData = {
           oldPassword: currentPass,
           newPassword: newPass,
         };
 
         await changePasswordAPI(passwordData);
-        console.log("Password changed successfully.");
+        alert("Password changed successfully.");
         handleClose();
       } catch (error) {
         console.error("Failed to change password:", error.message);

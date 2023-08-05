@@ -48,10 +48,8 @@ function EditModal(props) {
       setDueDate(formattedDueDate || ""); // Use the formatted date or an empty string if invalid
       setPriority(priority || "");
     }, [title, description, formattedDueDate, priority]);
-  
 
-  const [Title, setTitle] = useState("");
-    
+  const [Title, setTitle] = useState("");    
   const [Description, setDescription] = useState("");
   const [DueDate, setDueDate] = useState("");
   const [Priority, setPriority] = useState("");
