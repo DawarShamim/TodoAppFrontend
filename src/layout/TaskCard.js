@@ -53,7 +53,6 @@ function TaskCard({ task ,fetchTasks }) {
 
     const handleEdit = () => {     
       setShow(true); 
-      // console.log(task);
       setTaskData(task,fetchTasks);
 
       // Add your edit logic here...

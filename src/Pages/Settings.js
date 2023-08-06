@@ -46,7 +46,7 @@ const config = config_header();
     
     setLoading(true);
     if (!firstname.trim() && !lastname.trim()){
-        console.log("heelo");
+
         navigate('/profile')
         setLoading(false);
         alert(`Updated Profile successfully`);
