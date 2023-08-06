@@ -28,6 +28,7 @@ const createTaskAPI = async (taskData) => {
 };
 
 function Modalbox(props) {
+  
   const [Title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
   const [DueDate, setDueDate] = useState("");
@@ -69,11 +70,13 @@ function Modalbox(props) {
         };
 
         await createTaskAPI(taskData);
-        props.fetchTasks();
+        
+const refresh= props.fetchTasks;
+refresh();
         handleClose();
       } catch (error) {
         console.error("Failed to create task:", error.message);
-        alert("Error creating task.");
+        alert("Due Date must be in the Future.");
       }
     } else if (props.type === "Password") {
       try {
