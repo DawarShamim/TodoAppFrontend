@@ -6,10 +6,9 @@ import { baseURL, config_header } from '../services/base.services';
 // Move API functions outside the component
 const EditTaskAPI = async (taskData,id) => {
   try {
-    console.log(taskData,id);
     const response = await axios.put(`${baseURL}api/Task/changeTask/${id}`, taskData, config_header());
     // Check the status code
-    console.log(response);
+
     if (response.status === 200) {
       return response;
     }

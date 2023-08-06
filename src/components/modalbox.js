@@ -69,6 +69,7 @@ function Modalbox(props) {
         };
 
         await createTaskAPI(taskData);
+        props.fetchTasks();
         handleClose();
       } catch (error) {
         console.error("Failed to create task:", error.message);

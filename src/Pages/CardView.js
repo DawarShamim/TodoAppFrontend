@@ -127,7 +127,7 @@ useEffect(() => {
           <button className="btn" onClick={handleShow}>
             Add New
           </button>
-          <Modalbox title="New Task" show={show} onClose={handleClose} type="Task" />
+          <Modalbox title="New Task" show={show} onClose={handleClose} type="Task" fetchTasks={refresher}/>
           <Dropdown onSelect={handleOrderByChange} className="ml-3">
             <Dropdown.Toggle variant="secondary" id="dropdownMenuButton">
               {orderBy ? `Order By: ${orderBy}` : 'Order By'}
