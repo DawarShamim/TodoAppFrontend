@@ -1,7 +1,7 @@
 import jwt_decode from "jwt-decode";
 
-// const baseURL = 'https://enchanting-ruby-nightingale.cyclic.app/';
-const baseURL = 'http://localhost:8080/';
+const baseURL = 'https://enchanting-ruby-nightingale.cyclic.app/';
+// const baseURL = 'http://localhost:8080/';
 
 
 function getToken() {
