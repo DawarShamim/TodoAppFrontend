@@ -84,8 +84,6 @@ function TaskCard({ task ,fetchTasks }) {
   };
     
     return (<>
-        <Navbar/>
-                {/* <div className="card-body"> */}
                 <div className={`card-body ${TaskBodyColor}`}>
         {popupShowAlert && <Alertprompt message={alertMessage} onClose={handleCloseAlert} />}
 

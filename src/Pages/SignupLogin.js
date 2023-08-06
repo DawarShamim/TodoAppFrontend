@@ -163,7 +163,8 @@ const validateForm= () =>{
       })
       .catch(error => {
         setErrors((prevErrors) => ({ ...prevErrors, Email: '*Email already Registered' }));    
-});}}
+});}else{return;}
+}
 
 const handleKeyPress = (event, type) => {
   if (event.key === "Enter") {

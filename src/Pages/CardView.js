@@ -8,6 +8,7 @@ import {useNavigate} from 'react-router-dom';
 import { baseURL,config_header } from '../services/base.services';
 import axios from 'axios';
 import { useState,useEffect } from 'react';
+import Navbar from '../components/NavBar';
 
 function CardView() {
   const navigate = useNavigate();
@@ -54,7 +55,6 @@ useEffect(() => {
     const getAllTasks = async () => {
       try {
         const response = await axios.get(`${baseURL}api/Task/all`,config);
-        console.log(response.data.tasks);
 
         // Check the status code
         if (response.status === 200) {
@@ -116,8 +116,10 @@ useEffect(() => {
     sortedTasks = sortTasksByPriority(tasks,sortOrder);
   }
 
-  return (<div className="body-container">
-<div className="row">
+  return (<>
+  <Navbar/>
+  <div className="body-container">
+      <div className="row">
         <div className="col-2">
           <h1>Tasks</h1>
         </div>
@@ -148,7 +150,8 @@ useEffect(() => {
       </div>
 
       <TaskList tasks={sortedTasks} fetchTasks={refresher} />
-    </div>);
+    </div>
+    </>);
 }
 
 export default CardView;
