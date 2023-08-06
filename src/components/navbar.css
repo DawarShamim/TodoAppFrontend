@@ -66,3 +66,8 @@
     padding :20px;
   }
   
+  .frost-glass {
+    background-color: rgba(200, 200, 200, 0.15);
+    backdrop-filter: blur(10px);
+    color:#282c34;
+  }

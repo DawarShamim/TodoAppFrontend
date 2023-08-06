@@ -1,10 +1,6 @@
-
-
-/* Please ❤ this if you like it! */
-
-
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
-@import url('https://unicons.iconscout.com/release-pro/v4.0.0/css/solid.css');
+/* @import url('https://unicons.iconscout.com/release-pro/v4.0.0/css/solid.css'); */
+@import url('https://use.fontawesome.com/releases/v5.0.0/css/all.css');
 
 body{
 	font-family: 'Poppins', sans-serif;
@@ -77,8 +73,10 @@ h6 span{
   border-radius: 50%;
   color: #ffeba7;
   background-color: #102770;
-  font-family: 'unicons';
-  content: '\eb4f';
+  font-family: 'Font Awesome 6 Free';
+content: '\f01b';
+  /* font-family: 'unicons'; */
+  /* content: '\f177'; */
   z-index: 20;
   top: -10px;
   left: -10px;
@@ -88,7 +86,7 @@ h6 span{
   transition: all 0.5s ease;
 }
 .checkbox:checked + label:before {
-  transform: translateX(44px) rotate(-270deg);
+  transform: translateX(44px) rotate(-359deg);
 }
 
 .card-front, .card-back {

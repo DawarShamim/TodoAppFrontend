@@ -9,6 +9,25 @@ import EditModal from '../components/EditModal';
 
 function TaskCard({ task ,fetchTasks }) {
     const cardClasses = getPriorityClass(task.priority);
+
+    function getTaskClass(task) {
+      const currentDate = new Date();
+      const dueDate = new Date(task.due_date);
+  
+      const isCompleted = task.Status;
+      const isTaskOverdue = dueDate < currentDate;
+  
+      if (isCompleted) {
+          return 'completed';
+      } else if (isTaskOverdue) {
+          return 'overdue';
+      } else {
+          return '';
+      }
+  }
+  const TaskBodyColor = getTaskClass(task);
+
+
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
     const config = config_header();
     const [popupShowAlert, setpopupShowAlert] = useState(false);
@@ -21,7 +40,6 @@ function TaskCard({ task ,fetchTasks }) {
     const handleDelete = () => {
       setConfirmationOpen(true);
     };
-
     // on Confirmation of delete button 
     const handleConfirmDelete = async() => {
       await axios.delete(`${baseURL}api/Task/delete/${task.id}`,config);
@@ -29,7 +47,6 @@ function TaskCard({ task ,fetchTasks }) {
       // setShowAlert(true); 
       setConfirmationOpen(false);
     };
-
     const handleCancelDelete = () => {
       setConfirmationOpen(false);
     };
@@ -41,7 +58,6 @@ function TaskCard({ task ,fetchTasks }) {
 
       // Add your edit logic here...
     };
-  
     const handleUpdate = async () => {
       const payload = { newstatus: !task.Status };
       try {
@@ -56,6 +72,7 @@ function TaskCard({ task ,fetchTasks }) {
         
       }
     };
+
   const [alertMessage, setAlertMessage] = useState('');
 
   const handleShowAlert = (message) => {
@@ -69,14 +86,8 @@ function TaskCard({ task ,fetchTasks }) {
     
     return (<>
         <Navbar/>
-                <div className="card-body">
-        
-          {/* <Alertprompt type="success" message={`Status update of ${task.title} successful!`} onClose={() => setShowStatusUpdateAlert(false)} />
-         */}
-          {/* <Alertprompt severity="success" message="Sample Success Message"></Alertprompt> */}
-            {/* <Alertprompt severity="danger" message='sample'></Alertprompt> */}
-        {/* <Alertprompt type="success">Deleted {task.title}</Alertprompt> */}
-      
+                {/* <div className="card-body"> */}
+                <div className={`card-body ${TaskBodyColor}`}>
         {popupShowAlert && <Alertprompt message={alertMessage} onClose={handleCloseAlert} />}
 
         <div className={cardClasses}>
@@ -91,8 +102,7 @@ function TaskCard({ task ,fetchTasks }) {
           </p>
           <button className="btn btn-primary" onClick={handleEdit}>
             Edit
-          </button>
-          
+          </button>  
           <button className="btn btn-danger" onClick={handleDelete}>
             Delete
           </button>

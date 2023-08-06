@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
-@import url('https://unicons.iconscout.com/release-pro/v4.0.0/css/solid.css');
+@import url('https://use.fontawesome.com/releases/v6.0.0-beta1/css/all.css');
+/* @import url('https://unicons.iconscout.com/release-pro/v4.0.0/css/solid.css'); */
+
 
 body{
 	font-family: 'Poppins', sans-serif;
@@ -31,9 +33,6 @@ p {
 h4 {
   font-weight: 600;
 }
-
-
-
 
 h6 span{
   padding: 0 20px;
@@ -75,8 +74,12 @@ h6 span{
   border-radius: 50%;
   color: #ffeba7;
   background-color: #102770;
-  font-family: 'unicons';
-  content: '\eb4f';
+  /* font-family: 'unicons'; */
+  /* <MoveUpLeft /> */
+  /* content: '\eb4f'; */
+  font-family: 'Font Awesome 5 Free';
+      content: '\f007';
+
   z-index: 20;
   top: -10px;
   left: -10px;

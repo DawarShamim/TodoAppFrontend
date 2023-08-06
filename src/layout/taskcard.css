@@ -8,6 +8,14 @@
   .card-body {
     margin: 20px;
   }
+  .card-body.completed {
+    background-color: rgba(0, 128, 0, 0.2); /* Green color with light opacity for completed tasks */
+  }
+  
+  .card-body.overdue {
+    background-color: rgba(255, 0, 0, 0.2); /* Red color with light opacity for overdue tasks */
+  }
+
   .card-title {
     font-size: 20px;
     font-weight: bold;
@@ -62,7 +70,7 @@
   }
   
   .card-priority-medium {
-    border: 3px solid #ffc107;
+    border: 3px solid orange;
     padding :20px;
   }
   

@@ -3,13 +3,13 @@ import React,{useState} from 'react';
 import './signuplogin.css';
 import { baseURL, saveToken } from '../services/base.services';
 import { useNavigate} from 'react-router-dom';
-import * as Loader from "react-loader-spinner";
+import {Mail,Lock,User2,MoveUpLeft} from "lucide-react";
 
 function SignupLogin() {
   const navigate = useNavigate();
   const [logEmail, setLogEmail] = useState('');
   const [logPassword, setLogPassword] = useState('');
-  const [isLoading,setLoading] = useState(false);
+  const[APIhit,setAPIhit] =useState(false);
 
   const [signUpFName, setSignUpFName] = useState('');
   const [signUpLName, setSignUpLName] = useState('');
@@ -60,8 +60,8 @@ function SignupLogin() {
 
   const handleLogInSubmit = () => {
     setErrors({});
-    setLoading(true);
-      if (!logEmail) {
+    setAPIhit(true);
+    if (!logEmail) {
       setErrors((prevErrors) => ({ ...prevErrors, Logmail: '*Enter Email or Username' }));
     
     } else if (!logPassword) {
@@ -92,7 +92,7 @@ function SignupLogin() {
               setLogPassword('');
         })  
     };
-    setLoading(false);
+    setAPIhit(false);
   };
   
 const validateForm= () =>{
@@ -137,9 +137,7 @@ const validateForm= () =>{
 
   const handleSignUpSubmit = () => {      
     const isValid = validateForm();
-
     if (isValid) {
-      
   const trimmedEmail = signUpEmail.replace(/@.*/, ''); // Removes everything after the @ symbol
   const SignupPayload = {
     Email: signUpEmail,
@@ -196,8 +194,8 @@ const handleKeyPress = (event, type) => {
                       <div className="center-wrap">
                         <div className="section text-center">
                           <h4 className="mb-4 pb-3">Log In</h4>
-                          <div className="form-group">
                           {errors.Invalid && <p className="error-message">{errors.Invalid}</p>}
+                          <div className="form-group">
           
                             <input 
                             type="email"
@@ -210,8 +208,7 @@ const handleKeyPress = (event, type) => {
                             onChange={e=>setLogEmail(e.target.value)}
                             onKeyDown={(e) => handleKeyPress(e, "login")}
                              />
-
-                            <i className="input-icon uil uil-at"></i>  
+                            <Mail className="input-icon" />  
                             {errors.Logmail && <p className="error-message">{errors.Logmail}</p>}
                             </div>
                           
@@ -227,13 +224,12 @@ const handleKeyPress = (event, type) => {
                             onChange={e=>setLogPassword(e.target.value)}
                             onKeyDown={(e)=>{handleKeyPress(e,"login")}}
                             />
-                            
-                            <i className="input-icon uil uil-lock-alt"></i>
+                            <Lock className="input-icon"/>
                             {errors.logPassword && <p className="error-message">{errors.logPassword}</p>}
                           
                           </div>
-                          <button className="btn mt-4" onClick={handleLogInSubmit} disabled ={isLoading}>
-                          {isLoading ? (<Loader.BallTriangle type="Oval" color="#fff" height={20} width={20} /> ) : ('Login' )}</button>
+                          <button className="btn mt-4" onClick={handleLogInSubmit} disabled ={APIhit}>
+                          {APIhit ? ('Loading') : ('Login')}</button>
                           <p className="mb-0 mt-4 text-center"><a href="#0" className="link">Forgot your password?</a></p>
                         </div>
                       </div>
@@ -255,7 +251,7 @@ const handleKeyPress = (event, type) => {
                                 onChange={e=>setSignUpFName(e.target.value)} 
                                 onKeyDown={(e) => handleKeyPress(e, "signup")}
                                 />
-                                <i className="input-icon uil uil-user"></i>
+                                <User2 className="input-icon" />
                               </div>
 
                               <div className="flexbox-gap"></div>
@@ -271,7 +267,7 @@ const handleKeyPress = (event, type) => {
                                 onChange={e=>setSignUpLName(e.target.value)} 
                                 onKeyDown={(e) => handleKeyPress(e, "signup")} 
                                 />
-                                <i className="input-icon uil uil-at"></i>
+                                <User2 className="input-icon" />
                               </div>
                             </div>
                               {(errors.LastName || errors.FirstName) && (<p className="error-message">{errors.LastName || errors.FirstName}</p>)}
@@ -286,7 +282,7 @@ const handleKeyPress = (event, type) => {
                               onChange={e=>setSignUpEmail(e.target.value)} 
                               onKeyDown={(e) => handleKeyPress(e, "signup")}
                               />
-                              <i className="input-icon uil uil-user"></i>
+                              <Mail className="input-icon"/>
                               {errors.Email && <p className="error-message">{errors.Email}</p>}
                             </div>
 
@@ -301,8 +297,7 @@ const handleKeyPress = (event, type) => {
                               onChange={e=>setSignUpPassword(e.target.value)} 
                               onKeyDown={(e) => handleKeyPress(e, "signup")}
                               />  
-                              <i className="input-icon uil uil-user"></i>
-                              {/* <FontAwesomeIcon icon={faLock} className="input-icon" /> */}
+                              <Lock className="input-icon" />
                               {errors.Password && <p className="error-message">{errors.Password}</p>}
                               </div>
 
@@ -317,7 +312,7 @@ const handleKeyPress = (event, type) => {
                               onChange={e=>setSignUpConfirm(e.target.value)} 
                               onKeyDown={(e) => handleKeyPress(e, "signup")}
                               />
-                              <i className="input-icon uil uil-lock-alt"></i>
+                              <Lock className="input-icon" />
                               {errors.Confirm && <p className="error-message">{errors.Confirm}</p>}
                             </div>
 
@@ -362,8 +357,8 @@ const handleKeyPress = (event, type) => {
                             {errors.DOB && <p className="error-message">{errors.DOB}</p>}
                             
                             </div>
-                            <button className="btn mt-4" onClick={handleSignUpSubmit} disabled ={isLoading}>
-                          {isLoading ? (<Loader.BallTriangle  type="Oval" color="#fff" height={20} width={20} /> ) : ('Sign Up' )}</button>
+                            <button className="btn mt-4" onClick={handleSignUpSubmit} disabled ={APIhit}>
+                          {APIhit ? ('Loading' ) : ('Sign Up' )}</button>
 
                           </div>
                         </div>

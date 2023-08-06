@@ -17,7 +17,7 @@ function Navbar() {
   };
   return (
     <nav  className="navbar border-bottom frost-glass navbar-expand-lg navbar-dark fixed-top">
-      <div className="container  " >
+      <div className="container " >
         <div className="d-flex justify-content-between w-100">
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
             <Link className="navbar-brand" to="/login">

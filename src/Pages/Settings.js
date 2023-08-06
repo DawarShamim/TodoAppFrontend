@@ -3,9 +3,11 @@ import axios from "axios";
 import { config_header, baseURL } from "../services/base.services";
 import { Form, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/NavBar";
+
 
 function Settings() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [firstname, setFirstname] = useState('Not Available');
   const [lastname, setLastname] = useState('Not Available');
   const [isLoading,setLoading] = useState(false);
@@ -71,7 +73,9 @@ const config = config_header();
 
   return (
     <>
-    <div className="card-3d-wrap mx-auto">
+          <Navbar/>
+            <div className="body-container">
+                <div className="card-3d-wrap mx-auto">
                   <div className="card-3d-wrapper">
                     <div className="card-front">
                       <div className="center-wrap">
@@ -108,31 +112,16 @@ const config = config_header();
                                 </Col>
                             </Row>
                             </Form.Group>
-        {/* <Form.Group controlId="formBday">
-          <Row className="form-group">
-            <Col>
-              <Form.Label>Birthday</Form.Label>
-            </Col>
-            <Col>
-              <Form.Control
-                type="text"
-                placeholder="Enter Birthday"
-                value={birthday}
-                onChange={(e) => setBirthday(e.target.value)}
-              />
-            </Col>
-          </Row>
-        </Form.Group> */}
-      </Form>
+                            </Form>
                           <button className="btn mt-5"
                           onClick={HandleUpdate} disabled ={isLoading}
                           >Update</button>
                         </div>
                       </div>
                     </div>
-
-      </div>
-      </div>
+                  </div>
+                </div>
+              </div>
     </>
   );
 }
